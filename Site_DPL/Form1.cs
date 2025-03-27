@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -39,6 +40,7 @@ namespace Site_DPL
             Login login = new Login();
             login.Show();
             this.Hide();
+
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -157,6 +159,46 @@ namespace Site_DPL
               tempoSaiuDaTela = DateTime.Now; // Guarda o horário de saída  
               AtualizarLblTimes(); 
             }
+        }
+
+        private void btnOpen_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Arquivos de Texto (*.txt)|*.txt|Todos os Arquivos (*.*)|*.*";
+            openFileDialog.Title = "Abrir Arquivo";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string caminhoArquivo = openFileDialog.FileName;
+
+                using (StreamReader reader = new StreamReader(caminhoArquivo))
+                {
+                    txtBox.Text = reader.ReadToEnd();
+                }
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Arquivos de Texto (*.txt)|*.txt|Todos os Arquivos (*.*)|*.*";
+            saveFileDialog.Title = "Salvar Arquivo";
+            saveFileDialog.DefaultExt = "txt";
+            saveFileDialog.FileName = "arquivo";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string caminhoArquivo = saveFileDialog.FileName;
+
+                using (StreamWriter writer = new StreamWriter(caminhoArquivo))
+                {
+                    writer.WriteLine(txtBox.Text);
+                }
+
+                MessageBox.Show("Arquivo salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+        
         }
     }
 }

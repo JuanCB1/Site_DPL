@@ -63,5 +63,10 @@ namespace Site_DPL
         {
 
         }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
