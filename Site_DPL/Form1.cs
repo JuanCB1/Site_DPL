@@ -87,7 +87,10 @@ namespace Site_DPL
 
         private void btnIniciar_Click(object sender, EventArgs e)
         {
-            IniciarFoco();
+            if (!timer1.Enabled) // Se o timer não estiver rodando, inicia
+            {
+                IniciarFoco();
+            }
         }
         private void IniciarFoco()
         {
@@ -110,9 +113,16 @@ namespace Site_DPL
         }
         private void btnPausar_Click(object sender, EventArgs e)
         {
-            timer1.Stop();
-            btnIniciar.Visible = true;
-            btnPausar.Visible = false;
+            if (timer1.Enabled)
+            {
+                timer1.Stop();
+                btnPausar.Text = "Continuar"; // Muda o texto do botão para "Continuar"
+            }
+            else
+            {
+                timer1.Start();
+                btnPausar.Text = "Pausar"; // Volta a ser "Pausar"
+            }
         }
 
         private void btnDescanso_Click(object sender, EventArgs e)
@@ -128,6 +138,12 @@ namespace Site_DPL
         }
         private void AtualizarLblTimes()
         {
+            if (!UsuarioEstaLogado())
+            {
+                lblTimes2.Text = "Faça login para ver os tempos.";
+                return;
+            }
+
             int minutosEstudo = tempoEstudoTotal / 60;
             int segundosEstudo = tempoEstudoTotal % 60;
 
@@ -197,8 +213,15 @@ namespace Site_DPL
 
                 MessageBox.Show("Arquivo salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-        
+        }
+        private bool UsuarioEstaLogado() 
+        {   
+              if (File.Exists("users.txt"))
+              {
+                  string[] linhas = File.ReadAllLines("users.txt");
+                  return linhas.Length > 0; // Verifica se o arquivo tem pelo menos uma linha
+              }
+            return false;
         }
     }
 }
